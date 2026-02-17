@@ -1,11 +1,13 @@
 # 🚀 STAR SHOOTER  
-### Quantum Vision – Team 12
 
 
 
----
 
-<br>
+to play 
+
+link : https://sonuraj-dev.github.io/-STAR-SHOOTER-/
+
+
 
 ## 🌌 About The Game
 
