@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Space Ambience Arena</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+</head>
+
+<body>
+    <a-scene>
+<a-assets>
+    <a-asset-item id="shipModel" src="spaceship.glb"></a-asset-item>
+</a-assets>
+
+        <!-- 🌌 Sky -->
+        <a-sky color="#050510"></a-sky>
+
+        <!-- 🎥 Camera -->
+      <!-- 🎮 Player Rig (Movement + Camera) -->
+<!-- 🎮 Player Rig -->
+<!-- 🎮 PLAYER RIG -->
+<a-entity id="rig" position="0 1.6 5" wasd-controls="acceleration: 40">
+
+    <!-- 🚀 SPACESHIP -->
+    <a-entity 
+        id="playerShip"
+        gltf-model="#shipModel"
+        position="0 -1 -4"
+        rotation="0 180 0"
+        scale="2 2 2">
+    </a-entity>
+
+    <!-- 🎥 CAMERA (Slightly Above & Behind) -->
+    <a-camera 
+        position="0 1 4"
+        look-controls="pointerLockEnabled: true">
+    </a-camera>
+
+</a-entity>
+
+
+
+
+        <!-- 💡 Lighting -->
+        <a-light type="ambient" color="#1a1a2e" intensity="0.8"></a-light>
+        <a-light type="point" position="0 20 10" color="#66FCF1" intensity="2"></a-light>
+
+        <!-- 🌍 Rotating Planet 1 -->
+        <a-sphere position="-20 15 -40" radius="6" color="#45A29E"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 15000">
+        </a-sphere>
+
+        <!-- 🔴 Rotating Planet 2 -->
+        <a-sphere position="25 10 -60" radius="4" color="#B22222"
+            animation="property: rotation; to: 360 0 0; loop: true; dur: 10000">
+        </a-sphere>
+
+        <!-- 🌌 Nebula Glow -->
+        <a-sphere radius="90" position="0 40 -100" color="#4B0082"
+            material="shader: flat; opacity: 0.15; transparent: true">
+        </a-sphere>
+
+        <!-- ⭐ Starfield -->
+        <a-entity id="stars"></a-entity>
+
+        <!-- 🌫 Floating Dust -->
+        <a-entity id="dust"></a-entity>
+
+        <!-- 🏟 Arena Floor -->
+        <a-plane position="0 0 -20" rotation="-90 0 0" width="200" height="200" color="#1F2833" material="roughness: 1">
+        </a-plane>
+
+    </a-scene>
+<script>
+    const scene = document.querySelector('a-scene');
+    const rig = document.querySelector('#rig');
+    const starContainer = document.querySelector('#stars');
+
+    const SPACE_SIZE = 500;
+    const STAR_COUNT = 500;
+    const PLANET_COUNT = 15;
+
+    const stars = [];
+    const planets = [];
+
+    /* ==============================
+       🎲 RANDOM POSITION GENERATOR
+    ============================== */
+    function randomPos() {
+        return {
+            x: (Math.random() - 0.5) * SPACE_SIZE,
+            y: Math.random() * 200,
+            z: (Math.random() - 0.5) * SPACE_SIZE
+        };
+    }
+
+    /* ==============================
+       ⭐ CREATE STARS
+    ============================== */
+    function createStar() {
+        const star = document.createElement('a-sphere');
+        star.setAttribute('radius', '0.1');
+        star.setAttribute('color', '#ffffff');
+
+        const pos = randomPos();
+        star.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+
+        starContainer.appendChild(star);
+        stars.push(star);
+    }
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+        createStar();
+    }
+
+    /* ==============================
+       🪐 CREATE PLANETS
+    ============================== */
+    function createPlanet() {
+        const planet = document.createElement('a-sphere');
+
+        const radius = 3 + Math.random() * 6;
+        const colors = ['#45A29E', '#B22222', '#4B0082', '#FFD700', '#00FFFF'];
+
+        planet.setAttribute('radius', radius);
+        planet.setAttribute('color', colors[Math.floor(Math.random() * colors.length)]);
+
+        const pos = randomPos();
+        planet.setAttribute('position', `${pos.x} ${pos.y + 20} ${pos.z}`);
+
+        planet.setAttribute(
+            'animation',
+            `property: rotation; to: 0 360 0; loop: true; dur: ${10000 + Math.random()*5000}`
+        );
+
+        scene.appendChild(planet);
+        planets.push(planet);
+    }
+
+    for (let i = 0; i < PLANET_COUNT; i++) {
+        createPlanet();
+    }
+
+    /* ==============================
+       ♾️ INFINITE WORLD LOGIC
+       (NO AUTO MOVEMENT)
+    ============================== */
+
+    AFRAME.registerComponent('infinite-world', {
+        tick: function () {
+
+            const playerPos = rig.getAttribute('position');
+
+            // Reposition stars when player moves far
+            stars.forEach(star => {
+                const pos = star.getAttribute('position');
+
+                if (Math.abs(playerPos.x - pos.x) > SPACE_SIZE / 2 ||
+                    Math.abs(playerPos.z - pos.z) > SPACE_SIZE / 2) {
+
+                    const newPos = randomPos();
+                    star.setAttribute('position',
+                        `${playerPos.x + newPos.x} ${newPos.y} ${playerPos.z + newPos.z}`
+                    );
+                }
+            });
+
+            // Reposition planets when player moves far
+            planets.forEach(planet => {
+                const pos = planet.getAttribute('position');
+
+                if (Math.abs(playerPos.x - pos.x) > SPACE_SIZE / 2 ||
+                    Math.abs(playerPos.z - pos.z) > SPACE_SIZE / 2) {
+
+                    const newPos = randomPos();
+                    planet.setAttribute('position',
+                        `${playerPos.x + newPos.x} ${newPos.y + 20} ${playerPos.z + newPos.z}`
+                    );
+                }
+            });
+
+        }
+    });
+
+    // Attach component to scene
+    scene.setAttribute('infinite-world', '');
+</script>
+
+
+
+</body>
+
+</html>

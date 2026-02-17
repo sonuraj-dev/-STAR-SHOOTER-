@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Star Shooter – Quantum Vision Team 12</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- A-Frame (ONLY ONCE) -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- JS Core Files (ORDER MATTERS) -->
+  <script src="js/gameState.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/enemies.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/shooting.js"></script>
+</head>
+
+<body>
+
+  <!-- Background FX -->
+  <canvas id="bg-canvas"></canvas>
+  <div id="scanlines"></div>
+  <div id="shoot-flash"></div>
+  <div id="hit-flash"></div>
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="overlay">
+    <div class="poster-wrap">
+      <img src="assets/poster.png" alt="Star Shooter">
+    </div>
+
+    <button class="btn" id="play-btn">▶ PLAY</button>
+
+    <p class="hint">
+      <b>MOUSE</b> AIM ·
+      <b>CLICK</b> SHOOT ·
+      <b>A / D</b> STRAFE ·
+      <b>SPACE / S</b> UP/DOWN
+    </p>
+  </div>
+
+  <!-- GAME OVER SCREEN -->
+  <div id="gameover-screen" class="overlay">
+    <h1>GAME OVER</h1>
+    <p class="go-sub">FINAL SCORE</p>
+    <div id="final-score">0</div>
+    <div id="wave-reached">WAVE 1 REACHED</div>
+    <button class="btn" id="replay-btn">↺ RETRY</button>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="hud-top">
+      <div class="hud-pill">
+        SCORE <span id="score-val">0</span>
+      </div>
+      <div class="hud-pill" id="wave-pill">
+        WAVE <span id="wave-val">1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crosshair -->
+  <div id="crosshair">
+    <div class="ch-ring"></div>
+    <div class="ch-dot"></div>
+  </div>
+
+  <!-- Health Bar -->
+  <div id="health-wrap">
+    <div id="health-label">HULL INTEGRITY</div>
+    <div id="health-track">
+      <div id="health-bar"></div>
+    </div>
+  </div>
+
+  <!-- Wave Announcement -->
+  <div id="wave-announce"></div>
+
+  <!-- Pointer Lock Prompt -->
+  <div id="lock-prompt">
+    CLICK ANYWHERE TO LOCK MOUSE · ESC TO RELEASE
+  </div>
+
+  <!-- Controls -->
+  <div id="controls-legend">
+    <b>MOUSE</b> Aim &nbsp;&nbsp; <b>CLICK</b> Shoot<br>
+    <b>A / D</b> Strafe<br>
+    <b>SPACE</b> Up &nbsp;&nbsp; <b>S</b> Down
+  </div>
+
+  <!-- A-Frame Scene -->
+  <a-scene id="main-scene" embedded>
+    <a-entity id="cam-rig" player-rig>
+      <a-camera></a-camera>
+    </a-entity>
+
+    <a-entity id="stars-container"></a-entity>
+    <a-entity id="enemy-container"></a-entity>
+    <a-entity id="expl-container"></a-entity>
+
+    <!-- Lighting -->
+    <a-light type="ambient" color="#334466" intensity="0.7"></a-light>
+    <a-light type="directional" color="#6688ff" intensity="0.9" position="1 2 -2"></a-light>
+  </a-scene>
+
+  <!-- MAIN JS LAST -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>
